@@ -1,5 +1,8 @@
 <?php
 
+use App\Models\Thing;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,5 +17,16 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
+    DB::enableQueryLog();
+
+    dd(
+        Thing::query()
+         ->whereHas('categories', function (Builder $query) {
+             $query->where('id', 1);
+         })
+         ->get(),
+        DB::getQueryLog()
+    );
+
     return view('welcome');
 });
